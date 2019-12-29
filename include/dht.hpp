@@ -50,6 +50,10 @@ public:
   Eigen::VectorXd forward(const Eigen::Ref<const Eigen::VectorXd> &fr);
   Eigen::VectorXd backward(const Eigen::Ref<const Eigen::VectorXd> &fk);
 
+  Eigen::VectorXd shift(const Eigen::Ref<const Eigen::VectorXd> &raw, int m);
+
+  Eigen::MatrixXd tmatrix() const;
+
 private:
   int order_;
   double rmax_;

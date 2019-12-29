@@ -39,6 +39,7 @@
 #include <Eigen/Dense>
 #include <boost/math/special_functions/bessel.hpp>
 #include <cmath>
+#include <iostream>
 
 using namespace Eigen;
 using boost::math::cyl_bessel_j;
@@ -46,12 +47,13 @@ using boost::math::cyl_bessel_j_zero;
 using std::pow;
 
 DiscreteHankelTransform::DiscreteHankelTransform(int order, double rmax, int nr)
-    : order_(order), rmax_(rmax), nr_(nr), roots_(VectorXd::Zero(nr)) {
+    : order_(order), rmax_(rmax), nr_(nr), roots_(nr_),
+      tmatrix_(nr_ - 1, nr_ - 1) {
   for (int i = 0; i < nr_; ++i) {
-    roots_(i) = cyl_bessel_j_zero(float(i + 1), order_);
+    roots_(i) = cyl_bessel_j_zero(float(order_), i + 1);
   }
-  for (int k = 0; k < nr_; ++k) {
-    for (int m = 0; m < nr_; ++m) {
+  for (int k = 0; k < nr_ - 1; ++k) {
+    for (int m = 0; m < nr_ - 1; ++m) {
       tmatrix_(m, k) =
           2.0 / (roots_(nr_ - 1) * pow(cyl_bessel_j(order + 1, roots_(k)), 2)) *
           cyl_bessel_j(order, roots_(m) * roots_(k) / roots_(nr_ - 1));
@@ -80,16 +82,32 @@ VectorXd DiscreteHankelTransform::k_sampling() {
 
 VectorXd DiscreteHankelTransform::forward(const Ref<const VectorXd> &fr) {
   VectorXd fk(nr_);
-  for (int m = 0; m < nr_; ++m) {
-    fk(m) = pow(rmax_, 2) / roots_(nr_ - 1) * (tmatrix_.row(m) * fr).sum();
+  for (int m = 0; m < nr_ - 1; ++m) {
+    fk(m) = pow(rmax_, 2) / roots_(nr_ - 1) *
+            (tmatrix_.row(m) * fr.head(nr_ - 1)).sum();
   }
   return fk;
 }
 
 VectorXd DiscreteHankelTransform::backward(const Ref<const VectorXd> &fk) {
   VectorXd fr(nr_);
-  for (int k = 0; k < nr_; ++k) {
-    fr(k) = roots_(nr_ - 1) / pow(rmax_, 2) * (tmatrix_.col(k) * fk).sum();
+  for (int k = 0; k < nr_ - 1; ++k) {
+    fr(k) = roots_(nr_ - 1) / pow(rmax_, 2) *
+            (tmatrix_.col(k) * fk.head(nr_ - 1)).sum();
   }
   return fr;
 }
+
+VectorXd DiscreteHankelTransform::shift(const Ref<const VectorXd> &raw, int m) {
+  VectorXd ret(VectorXd::Zero(nr_ - 1));
+  for (int q = 0; q < nr_ - 1; ++q) {
+    for (int p = 0; p < nr_ - 1; ++p) {
+      for (int k = 0; k < nr_ - 1; ++k) {
+        ret(q) += tmatrix_(m, k) * tmatrix_(k, q) * tmatrix_(k, p) * raw(p);
+      }
+    }
+  }
+  return ret;
+}
+
+MatrixXd DiscreteHankelTransform::tmatrix() const { return tmatrix_; }
