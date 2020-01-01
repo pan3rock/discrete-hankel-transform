@@ -42,7 +42,7 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(dhtcxx, m) {
   py::class_<DiscreteHankelTransform>(m, "DiscreteHankelTransform")
-      .def(py::init<int, double, int>())
+      .def(py::init<int, int>())
       .def("r_sampling", &DiscreteHankelTransform::r_sampling)
       .def("k_sampling", &DiscreteHankelTransform::k_sampling)
       .def("forward", &DiscreteHankelTransform::forward)

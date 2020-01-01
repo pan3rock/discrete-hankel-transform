@@ -41,11 +41,11 @@
 
 class DiscreteHankelTransform {
 public:
-  DiscreteHankelTransform(int order, double rmax, int nr);
+  DiscreteHankelTransform(int order, int nr);
   ~DiscreteHankelTransform();
 
-  Eigen::VectorXd r_sampling();
-  Eigen::VectorXd k_sampling(); // k is rho in the paper
+  Eigen::VectorXd r_sampling(double rmax);
+  Eigen::VectorXd k_sampling(double rmax); // k is rho in the paper
 
   Eigen::VectorXd forward(const Eigen::Ref<const Eigen::VectorXd> &fr);
   Eigen::VectorXd backward(const Eigen::Ref<const Eigen::VectorXd> &fk);

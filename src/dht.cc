@@ -46,9 +46,8 @@ using boost::math::cyl_bessel_j;
 using boost::math::cyl_bessel_j_zero;
 using std::pow;
 
-DiscreteHankelTransform::DiscreteHankelTransform(int order, double rmax, int nr)
-    : order_(order), rmax_(rmax), nr_(nr), roots_(nr_),
-      tmatrix_(nr_ - 1, nr_ - 1) {
+DiscreteHankelTransform::DiscreteHankelTransform(int order, int nr)
+    : order_(order), nr_(nr), roots_(nr_), tmatrix_(nr_ - 1, nr_ - 1) {
   for (int i = 0; i < nr_; ++i) {
     roots_(i) = cyl_bessel_j_zero(float(order_), i + 1);
   }
@@ -63,7 +62,8 @@ DiscreteHankelTransform::DiscreteHankelTransform(int order, double rmax, int nr)
 
 DiscreteHankelTransform::~DiscreteHankelTransform() = default;
 
-VectorXd DiscreteHankelTransform::r_sampling() {
+VectorXd DiscreteHankelTransform::r_sampling(double rmax) {
+  rmax_ = rmax;
   VectorXd r(nr_);
   for (int i = 0; i < nr_; ++i) {
     r(i) = roots_(i) * rmax_ / roots_(nr_ - 1);
@@ -71,7 +71,8 @@ VectorXd DiscreteHankelTransform::r_sampling() {
   return r;
 }
 
-VectorXd DiscreteHankelTransform::k_sampling() {
+VectorXd DiscreteHankelTransform::k_sampling(double rmax) {
+  rmax_ = rmax;
   VectorXd k(nr_);
   double kmax = roots_(nr_ - 1) / rmax_;
   for (int i = 0; i < nr_; ++i) {

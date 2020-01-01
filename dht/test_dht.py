@@ -67,9 +67,9 @@ def test_modified_gaussian():
     order = 1
     rmax = 2
     num = 64
-    dht = DiscreteHankelTransform(order, rmax, num)
-    r_sample = dht.r_sampling()
-    k_sample = dht.k_sampling()
+    dht = DiscreteHankelTransform(order, num)
+    r_sample = dht.r_sampling(rmax)
+    k_sample = dht.k_sampling(rmax)
     a = 5.0
     fr_in = modified_gaussian_r(r_sample, a, order)
     fk_out = dht.forward(fr_in)
@@ -85,9 +85,9 @@ def test_sinc():
     rmax = 26.75
     num = 2**8
 
-    dht = DiscreteHankelTransform(order, rmax, num)
-    r_sample = dht.r_sampling()
-    k_sample = dht.k_sampling()
+    dht = DiscreteHankelTransform(order, num)
+    r_sample = dht.r_sampling(rmax)
+    k_sample = dht.k_sampling(rmax)
 
     a = 5.0
     fr_in = sinc_r(r_sample, a)
@@ -109,9 +109,9 @@ def test_ones():
     num = 2**9
     rmax = num * dr
 
-    dht = DiscreteHankelTransform(order, rmax, num)
-    r_sample = dht.r_sampling()
-    k_sample = dht.k_sampling()
+    dht = DiscreteHankelTransform(order, num)
+    r_sample = dht.r_sampling(rmax)
+    k_sample = dht.k_sampling(rmax)
 
     fr_in = ones_r(r_sample)
     fk_out = dht.forward(fr_in)
@@ -128,9 +128,9 @@ def test_shift():
     num = 2**8
     rmax = num * dr
 
-    dht = DiscreteHankelTransform(order, rmax, num)
-    r_sample = dht.r_sampling()
-    k_sample = dht.k_sampling()
+    dht = DiscreteHankelTransform(order, num)
+    r_sample = dht.r_sampling(rmax)
+    k_sample = dht.k_sampling(rmax)
 
     fr_in = ones_r(r_sample)
     fr_in = np.zeros(num)
