@@ -40,6 +40,7 @@
 #include <Eigen/Dense>
 
 class DiscreteHankelTransform {
+
 public:
   DiscreteHankelTransform(int order, int nr);
   ~DiscreteHankelTransform();
@@ -54,7 +55,7 @@ public:
 
   Eigen::MatrixXd tmatrix() const;
 
-private:
+protected:
   int order_;
   double rmax_;
   int nr_;

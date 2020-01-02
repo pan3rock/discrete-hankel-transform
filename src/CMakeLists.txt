@@ -3,6 +3,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/dht)
 set(FILE_LIST
    dht.cc
    pybind.cc
+   trim_dht.cc
 )
 
 pybind11_add_module(dhtcxx ${FILE_LIST})

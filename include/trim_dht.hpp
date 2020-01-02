@@ -1,14 +1,14 @@
 /*
- * File: pybind.cc
- * Created Date: 2019-12-29
+ * File: trim_dht.hpp
+ * Created Date: 2020-01-01
  * Author: Lei Pan
  * Contact: <panlei7@gmail.com>
  *
- * Last Modified: Sunday December 29th 2019 1:42:01 pm
+ * Last Modified: Wednesday January 1st 2020 11:27:12 am
  *
  * MIT License
  *
- * Copyright (c) 2019 Lei Pan
+ * Copyright (c) 2020 Lei Pan
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the 'Software'), to deal
@@ -34,25 +34,25 @@
  * ----------------------------------------------------------
  */
 
+#ifndef DHT_TRIM_DHT_H_
+#define DHT_TRIM_DHT_H_
+
 #include "dht.hpp"
-#include "trim_dht.hpp"
-#include <pybind11/eigen.h>
-#include <pybind11/pybind11.h>
+#include <Eigen/Dense>
 
-namespace py = pybind11;
+class TrimDHT : public DiscreteHankelTransform {
+public:
+  TrimDHT(int order, int nr, double rmax, int nexp);
+  ~TrimDHT();
 
-PYBIND11_MODULE(dhtcxx, m) {
-  py::class_<DiscreteHankelTransform>(m, "DiscreteHankelTransform")
-      .def(py::init<int, int>())
-      .def("r_sampling", &DiscreteHankelTransform::r_sampling)
-      .def("k_sampling", &DiscreteHankelTransform::k_sampling)
-      .def("forward", &DiscreteHankelTransform::forward)
-      .def("backward", &DiscreteHankelTransform::backward)
-      .def("shift", &DiscreteHankelTransform::shift)
-      .def("tmatrix", &DiscreteHankelTransform::tmatrix);
-  py::class_<TrimDHT>(m, "TrimDHT")
-      .def(py::init<int, int, double, int>())
-      .def("r_sampling", &TrimDHT::r_sampling)
-      .def("k_sampling", &TrimDHT::k_sampling)
-      .def("perform", &TrimDHT::perform);
-}
+  Eigen::VectorXd perform(const Eigen::Ref<const Eigen::VectorXd> &src);
+
+  Eigen::VectorXd r_sampling();
+  Eigen::VectorXd k_sampling();
+
+private:
+  Eigen::MatrixXd shift_matrix_;
+  double rmax_extend_;
+};
+
+#endif
