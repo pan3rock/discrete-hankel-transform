@@ -54,5 +54,6 @@ PYBIND11_MODULE(dhtcxx, m) {
       .def(py::init<int, int, double, int>())
       .def("r_sampling", &TrimDHT::r_sampling)
       .def("k_sampling", &TrimDHT::k_sampling)
+      .def("get_nr", &TrimDHT::get_nr)
       .def("perform", &TrimDHT::perform);
 }

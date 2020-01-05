@@ -37,3 +37,5 @@ VectorXd TrimDHT::r_sampling() {
 VectorXd TrimDHT::k_sampling() {
   return DiscreteHankelTransform::k_sampling(rmax_extend_);
 }
+
+int TrimDHT::get_nr() const { return nr_; }

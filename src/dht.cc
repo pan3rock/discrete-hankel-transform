@@ -64,20 +64,13 @@ DiscreteHankelTransform::~DiscreteHankelTransform() = default;
 
 VectorXd DiscreteHankelTransform::r_sampling(double rmax) {
   rmax_ = rmax;
-  VectorXd r(nr_);
-  for (int i = 0; i < nr_; ++i) {
-    r(i) = roots_(i) * rmax_ / roots_(nr_ - 1);
-  }
+  VectorXd r = roots_ / rmax_ * roots_(nr_ - 1);
   return r;
 }
 
 VectorXd DiscreteHankelTransform::k_sampling(double rmax) {
   rmax_ = rmax;
-  VectorXd k(nr_);
-  double kmax = roots_(nr_ - 1) / rmax_;
-  for (int i = 0; i < nr_; ++i) {
-    k(i) = roots_(i) * kmax / roots_(nr_ - 1);
-  }
+  VectorXd k = roots_ / rmax_;
   return k;
 }
 

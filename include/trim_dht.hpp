@@ -50,6 +50,8 @@ public:
   Eigen::VectorXd r_sampling();
   Eigen::VectorXd k_sampling();
 
+  int get_nr() const;
+
 private:
   Eigen::MatrixXd shift_matrix_;
   double rmax_extend_;
